@@ -4309,7 +4309,7 @@ function luna_widget_chat_handler( WP_REST_Request $req ) {
       header('Access-Control-Allow-Origin: *');
     }
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, X-WP-Nonce, x-wp-nonce, X-Luna-Composer, x-luna-composer, X-Luna-Composer-Mode, x-luna-composer-mode');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, X-WP-Nonce, x-wp-nonce');
     header('Access-Control-Allow-Credentials: true');
   }
   
