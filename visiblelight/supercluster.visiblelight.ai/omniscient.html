@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background:#000000 !important;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +8,8 @@
 </head>
 <body>
     <div
-        id="vlSuperclusterRoot"
-        class="vl-supercluster-root vl-supercluster"
+        id="vlSuperclusterRootUnset"
+        class="vl-supercluster-root-unset vl-supercluster-unset"
         data-login-path="/supercluster-ai-constellation-login/"
     >
 
@@ -392,15 +392,6 @@
         async function renderOmniscientAppObservatory() {
             console.log('[Omniscient App Observatory] Rendering page...');
             
-            // Hide any canvas elements (if they exist)
-            const canvasElements = document.querySelectorAll('canvas');
-            canvasElements.forEach(canvas => {
-                canvas.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; z-index: -1 !important;';
-            });
-            
-            // Ensure body background is transparent
-            document.body.style.cssText = 'background: transparent !important; background-color: transparent !important;';
-            
             // Ensure overlays and menus remain visible
             const overlay = document.querySelector('.vl-supercluster-overlay');
             const header = document.querySelector('.vl-header');
@@ -576,12 +567,6 @@
                 
                 // Force page content to be visible
                 pageContent.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1000 !important; background: #000000 !important; min-height: 100vh !important;';
-                
-                // Ensure body and html background doesn't cover content
-                document.body.style.cssText = 'background: transparent !important; background-color: transparent !important;';
-                if (document.documentElement) {
-                    document.documentElement.style.cssText = 'background: transparent !important; background-color: transparent !important;';
-                }
                 
                 // Initialize search and view toggle
                 const searchInput = document.getElementById('observatory-search');
