@@ -1,0 +1,1603 @@
+@font-face {
+    font-family: "Supercluster Display";
+    src: url("https://supercluster.visiblelight.ai/assets/fonts/HelveticaNowDisplay-Regular.ttf") format('truetype');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: "Supercluster Display";
+    src: url("https://supercluster.visiblelight.ai/assets/fonts/HelveticaNowDisplay-Medium.ttf") format('truetype');
+    font-weight: 500;
+  }
+  @font-face {
+    font-family: "Supercluster Display";
+    src: url("https://supercluster.visiblelight.ai/assets/fonts/HelveticaNowDisplay-Bold.ttf") format('truetype');
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: "Supercluster Mono";
+    src: url("https://supercluster.visiblelight.ai/assets/fonts/DMMono-Regular.ttf") format('truetype');
+    font-weight: 700;
+  }
+  :root {
+      color-scheme: dark;
+  }
+  
+  html,
+  body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      height: 100%;
+  }
+  
+  html.vl-supercluster-scroll-lock,
+  html.vl-supercluster-scroll-lock body {
+      overflow: hidden !important;
+      height: 100%;
+  }
+  
+  body {
+      margin: 0;
+      overflow: hidden;
+      font-family: "Supercluster Display", "Helvetica Neue", Arial, sans-serif;
+      background: #000000;
+      color: #f5f9ff;
+  }
+  
+  #vlSuperclusterRoot,
+  #vlSuperclusterRoot *,
+  #vlSuperclusterRoot *::before,
+  #vlSuperclusterRoot *::after,
+  #vlClientRoot,
+  #vlClientRoot *,
+  #vlClientRoot *::before,
+  #vlClientRoot *::after {
+      box-sizing: border-box;
+  }
+  
+  #vlSuperclusterRoot {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+      isolation: isolate;
+      color: inherit;
+  }
+  
+  #vlClientRoot {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+      isolation: isolate;
+      color: inherit;
+      background: radial-gradient(ellipse at center, #070b1a 0%, #02040a 100%);
+  }
+  
+  #vlSuperclusterRoot canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+  }
+  
+  #vlSuperclusterRoot .vl-supercluster-labels {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+  }
+  
+  /* Hide galaxy labels when Luna panel is shown */
+  #vlSuperclusterRoot:has(.luna-panel.show) .vl-supercluster-labels,
+  #vlClientRoot:has(.luna-panel.show) .vl-supercluster-labels {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+  }
+
+  /* Hide galaxy labels when Luna panel is shown */
+  #vlSuperclusterRoot:has(.luna-panel.show) .luna-composer-page,
+  #vlClientRoot:has(.luna-panel.show) .luna-composer-page {
+      filter:blur(8px) !important;
+      pointer-events: none !important;
+  }
+  
+  /* Hide galaxy controls when Luna panel is shown */
+  #vlSuperclusterRoot:has(.luna-panel.show) .vl-controls,
+  #vlClientRoot:has(.luna-panel.show) .vl-controls,
+  #vlSuperclusterRoot:has(.luna-panel.show) .vl-controls *,
+  #vlClientRoot:has(.luna-panel.show) .vl-controls *,
+  #vlSuperclusterRoot:has(.luna-panel.show) .vl-controls button,
+  #vlClientRoot:has(.luna-panel.show) .vl-controls button {
+      pointer-events: none !important;
+  }
+  
+  /* Force labels below panel at all times (fallback) */
+  #vlSuperclusterRoot .luna-panel.show ~ .vl-supercluster-labels,
+  #vlClientRoot .luna-panel.show ~ .vl-supercluster-labels {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+  }
+  
+  
+  #vlSuperclusterRoot .ui-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: clamp(1.25rem, 4vw, 2rem);
+      background: linear-gradient(180deg, rgba(2, 4, 10, 0) 60%, rgba(2, 4, 10, 0.65) 100%);
+      z-index: 3;
+  }
+  
+  #vlSuperclusterRoot .info-card {
+      backdrop-filter: blur(16px);
+      background: rgba(9, 13, 31, 0.72);
+      border: 1px solid rgba(120, 196, 255, 0.2);
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      max-width: min(90vw, 540px);
+      pointer-events: auto;
+      box-shadow: 0 40px 120px rgba(12, 18, 42, 0.65);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      opacity: 0;
+      transform: translateY(32px);
+  }
+  
+  #vlSuperclusterRoot .info-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  
+  #vlSuperclusterRoot .info-card h1 {
+      margin: 0 0 0.25rem;
+      font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+      letter-spacing: 0.04em;
+  }
+  
+  #vlSuperclusterRoot .info-card h2 {
+      margin: 0;
+      font-weight: 400;
+      font-size: 0.95rem;
+      opacity: 0.7;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+  }
+  
+  #vlSuperclusterRoot .info-card p {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.6;
+      opacity: 0.85;
+  }
+  
+  #vlSuperclusterRoot .floating-label {
+      position: absolute;
+      padding: 0.35rem 0.6rem;
+      background: rgba(0,0,0, 0.8);
+      border-radius: 6px;
+      color: #d8ecff;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      pointer-events: none;
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease;
+  }
+  
+  #vlSuperclusterRoot .floating-label.active {
+      background: rgba(0,0,0, 0.95);
+      color: #fff4e9;
+  }
+  
+  #vlSuperclusterRoot .info-metrics {
+      list-style: none;
+      margin: 1rem 0 0;
+      padding: 0;
+      display: grid;
+      gap: 0.65rem;
+  }
+  
+  #vlSuperclusterRoot .info-metrics li {
+      background: rgba(18, 28, 52, 0.6);
+      border: 1px solid rgba(125, 188, 255, 0.2);
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+      color: #e4f1ff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+  }
+  
+  #vlSuperclusterRoot .info-metrics li span {
+      opacity: 0.75;
+      font-size: 0.8rem;
+  }
+  
+  #vlSuperclusterRoot .info-metrics li strong {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #fff4e9;
+  }
+  
+  #vlSuperclusterRoot .data-verification-panel {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(10, 16, 32, 0.85);
+      border: 1px solid rgba(105, 174, 255, 0.3);
+      border-radius: 12px;
+      padding: 1rem;
+      max-width: 400px;
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      pointer-events: auto;
+  }
+  
+  #vlSuperclusterRoot .verification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+  }
+  
+  #vlSuperclusterRoot .verification-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+  }
+  
+  #vlSuperclusterRoot .verification-header h3 {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #e1f0ff;
+      font-weight: 600;
+  }
+  
+  #vlSuperclusterRoot .toggle-verification {
+      background: rgba(120, 196, 255, 0.2);
+      border: 1px solid rgba(120, 196, 255, 0.4);
+      color: #e1f0ff;
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+  }
+  
+  #vlSuperclusterRoot .toggle-verification:hover {
+      background: rgba(120, 196, 255, 0.3);
+      border-color: rgba(120, 196, 255, 0.6);
+  }
+  
+  #vlSuperclusterRoot .sync-button {
+      background: rgba(86, 211, 100, 0.2);
+      border: 1px solid rgba(86, 211, 100, 0.4);
+      color: #e1f0ff;
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 600;
+  }
+  
+  #vlSuperclusterRoot .sync-button:hover {
+      background: rgba(86, 211, 100, 0.3);
+      border-color: rgba(86, 211, 100, 0.6);
+  }
+  
+  #vlSuperclusterRoot .sync-button:disabled {
+      background: rgba(90, 118, 164, 0.2);
+      border-color: rgba(90, 118, 164, 0.4);
+      color: rgba(189, 210, 244, 0.5);
+      cursor: not-allowed;
+  }
+  
+  #vlSuperclusterRoot .verification-content {
+      display: none;
+  }
+  
+  #vlSuperclusterRoot .verification-content.show {
+      display: block;
+  }
+  
+  #vlSuperclusterRoot .verification-item {
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      color: #d8ecff;
+  }
+  
+  #vlSuperclusterRoot .verification-item strong {
+      color: #fff4e9;
+      font-weight: 600;
+  }
+  
+  #vlSuperclusterRoot .verification-item span {
+      color: #a9c7ff;
+  }
+  
+  /* Visible Light Supercluster Overlay Styles */
+  #vlSuperclusterRoot .vl-supercluster-overlay,
+  #vlClientRoot .vl-supercluster-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1000;
+      overflow: hidden;
+  }
+  
+  #vlSuperclusterRoot .vl-supercluster-overlay *,
+  #vlClientRoot .vl-supercluster-overlay * {
+      pointer-events: auto;
+  }
+  
+  /* Right Sidebar */
+  #vlSuperclusterRoot .vl-right-sidebar,
+  #vlClientRoot .vl-right-sidebar {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      width: 215px; /* match left menu/controls width */
+      z-index: 1001; /* above canvas and equal to left UI */
+      pointer-events: auto;
+  }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget,
+  #vlClientRoot .vl-right-sidebar .vl-widget {
+      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.01);
+      border-left: 1px solid #1f1d1a;
+      border-radius: 0;
+      margin-bottom: 0.75rem;
+  }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget-header,
+  #vlClientRoot .vl-right-sidebar .vl-widget-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.75rem;
+  }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget-header h3,
+  #vlClientRoot .vl-right-sidebar .vl-widget-header h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #fff4e9;
+  }
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget-body,
+  #vlClientRoot .vl-right-sidebar .vl-widget-body {
+    padding: 0.5rem 0.75rem 0.75rem;
+    color: #fff4e9;
+    font-size: 0.8rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    max-height: 1000px;
+    overflow: auto;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out, opacity 0.3s ease-out;
+    opacity: 1;
+  }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget:has(.vl-widget-body.vl-widget-body-hidden) .vl-widget-header,
+     #vlClientRoot .vl-right-sidebar .vl-widget:has(.vl-widget-body.vl-widget-body-hidden) .vl-widget-header {
+         border-bottom: none;
+     }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget-body.vl-widget-body-hidden,
+  #vlClientRoot .vl-right-sidebar .vl-widget-body.vl-widget-body-hidden {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget-body.vl-widget-body-hidden,
+  #vlClientRoot .vl-right-sidebar .vl-widget-body.vl-widget-body-hidden, #recentActivityWidget .vl-widget-body.vl-widget-body-hidden {
+      border-bottom:none;
+  }
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget-toggle,
+  #vlClientRoot .vl-right-sidebar .vl-widget-toggle {
+    background: transparent;
+    padding: 0.25rem 0rem .25rem .5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border:none;
+  }
+  
+  .vl-toggle-icon {
+    width: 15px;
+  }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget-toggle:hover,
+  #vlClientRoot .vl-right-sidebar .vl-widget-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #5a5a5a;
+  }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget-toggle:active,
+  #vlClientRoot .vl-right-sidebar .vl-widget-toggle:active {
+    transform: scale(0.95);
+  }
+  #vlSuperclusterRoot .vl-right-sidebar .vl-widget-body a,
+  #vlClientRoot .vl-right-sidebar .vl-widget-body a {
+    font-weight: 800;
+    color: #fff4e9;
+  }
+  #vlSuperclusterRoot .vl-right-sidebar .vl-activity-item a {
+    color: #fff4e9 !important;
+    background: none !important;
+    -webkit-text-fill-color: unset;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight:400;
+    border-bottom: none;
+    text-decoration:none;
+  }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-status-icon-wrap img,
+  #vlClientRoot .vl-right-sidebar .vl-status-icon-wrap img {
+      width: 14px;
+      height: 14px;
+      margin-top:5px;
+  }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-activity-list,
+  #vlClientRoot .vl-right-sidebar .vl-activity-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
+  
+  #vlSuperclusterRoot .vl-right-sidebar .vl-activity-item,
+  #vlClientRoot .vl-right-sidebar .vl-activity-item,
+  #vlSuperclusterRoot .vl-right-sidebar .vl-activity-empty,
+  #vlClientRoot .vl-right-sidebar .vl-activity-empty {
+      padding: 0.4rem 0;
+      font-weight:700;
+  }
+  
+  @media (max-width: 1024px) {
+      #vlSuperclusterRoot .vl-right-sidebar,
+      #vlClientRoot .vl-right-sidebar {
+          right: 1rem;
+          top: 1rem;
+          width: 200px;
+      }
+  }
+  
+  /* Header - Top Left */
+  #vlSuperclusterRoot .vl-header,
+  #vlClientRoot .vl-header {
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      z-index: 1001;
+  }
+  
+  #vlSuperclusterRoot .vl-logo,
+  #vlClientRoot .vl-logo {
+      margin-bottom: 1rem;
+  }
+  #vlSuperclusterRoot .vl-logo img,
+  #vlClientRoot .vl-logo img {
+    width: 35px;
+  }
+  #vlSuperclusterRoot .chat-icon img,
+  #vlClientRoot .chat-icon img {
+    max-width: 35px;
+    vertical-align:middle;
+  }
+  #vlSuperclusterRoot .vl-logo svg,
+  #vlClientRoot .vl-logo svg {
+      filter: drop-shadow(0 0 10px rgba(43, 106, 255, 0.5));
+  }
+  
+  #vlSuperclusterRoot .vl-client-greeting h2,
+  #vlClientRoot .vl-client-greeting h2 {
+      color: #fff4e9;
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+  }
+  
+  /* Main Navigation Menu */
+  #vlSuperclusterRoot .vl-main-menu,
+  #vlClientRoot .vl-main-menu {
+      position: absolute;
+      top: 9rem;
+      left: 2rem;
+      z-index: 1001;
+  }
+  
+  #vlSuperclusterRoot .vl-main-menu ul,
+  #vlClientRoot .vl-main-menu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
+  
+  #vlSuperclusterRoot .vl-main-menu li,
+  #vlClientRoot .vl-main-menu li {
+      margin-bottom: 0.5rem;
+  }
+  
+  #vlSuperclusterRoot .vl-main-menu a,
+  #vlClientRoot .vl-main-menu a {
+      display: flex;
+      align-items: center;
+      padding: 0.35rem .6rem;
+      color: #fff4e9;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+      min-width: 200px;
+  }
+  
+  #vlSuperclusterRoot .vl-main-menu a:hover,
+  #vlClientRoot .vl-main-menu a:hover {
+      transform: translateX(5px);
+      cursor:pointer;
+  }
+  
+  #vlSuperclusterRoot .vl-main-menu li.active a,
+  #vlClientRoot .vl-main-menu li.active a {
+      background: #fff4e9;
+      border-color: #fff4e9;
+      color: #000;
+  }
+  
+  #vlSuperclusterRoot .vl-main-menu .icon,
+  #vlClientRoot .vl-main-menu .icon {
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+      width: 20px;
+      text-align: center;
+      line-height:14px;
+  }
+  
+  #vlSuperclusterRoot .vl-main-menu .label,
+  #vlClientRoot .vl-main-menu .label {
+      font-weight: 500;
+      font-size: 0.9rem;
+  }
+  
+  /* Bottom Left - Connection Status and Luna Chat */
+  #vlSuperclusterRoot .vl-bottom-left {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      z-index: 1001;
+  }
+  #vlClientRoot .vl-bottom-left {
+    position:absolute;
+    bottom: -2rem;
+    left: 0;
+    width: 215px;
+    height: auto !important;
+  }
+  #vlSuperclusterRoot .vl-license-key,
+  #vlClientRoot .vl-license-key,
+  #vlSuperclusterRoot .vl-license-display,
+  #vlClientRoot .vl-license-display {
+      border-radius: 12px;
+      padding: .5rem 1rem;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(8px);
+  }
+  #vlSuperclusterRoot .vl-license-key, #vlSuperclusterRoot .vl-connection-status,
+  #vlClientRoot .vl-license-key, #vlClientRoot .vl-connection-status,
+  #vlSuperclusterRoot .vl-license-display, #vlSuperclusterRoot .vl-connection-status,
+  #vlClientRoot .vl-license-display, #vlClientRoot .vl-connection-status {
+      max-width:215px;
+  }
+  
+  #vlSuperclusterRoot .license-label,
+  #vlClientRoot .license-label {
+    color: #8F9193;
+    font-size: 0.7rem;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: .1rem;
+  }
+  
+  #vlSuperclusterRoot .license-value,
+  #vlClientRoot .license-value {
+      color: #fff4e9;
+      font-weight: 600;
+      font-size: 0.9rem;
+      font-family: "Supercluster Mono";
+      word-break: break-all;
+  }
+  
+  #vlSuperclusterRoot .vl-connection-status,
+  #vlClientRoot .vl-connection-status {
+      display: flex;
+      align-items: center;
+      border-radius: 12px;
+      padding: 0;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(8px);
+  }
+  
+  #vlSuperclusterRoot .status-indicator,
+  #vlClientRoot .status-indicator {
+      margin-right: 0.75rem;
+  }
+  
+  #vlSuperclusterRoot .status-icon,
+  #vlClientRoot .status-icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #0F9900;
+      color: #fff4e9;
+      text-align: center;
+      line-height: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left:15px;
+  }
+  
+  #vlSuperclusterRoot .status-icon.error,
+  #vlClientRoot .status-icon.error {
+      background: #f85149;
+  }
+  
+  #vlSuperclusterRoot .status-text,
+  #vlClientRoot .status-text {
+      display: flex;
+      flex-direction: column;
+  }
+  
+  #vlSuperclusterRoot .status-label,
+  #vlClientRoot .status-label {
+      margin-bottom: 0.25rem;
+  }
+  #vlSuperclusterRoot .status-value, #vlSuperclusterRoot .status-label,
+  #vlClientRoot .status-value, #vlClientRoot .status-label {
+      color: #fff4e9;
+      font-size: 0.9rem;
+  }
+  #vlSuperclusterRoot .status-value,
+  #vlClientRoot .status-value {
+      font-weight: 600;
+  }
+  
+  #vlSuperclusterRoot .vl-luna-chat,
+  #vlClientRoot .vl-luna-chat {
+      margin-top: 1rem;
+      width: 100%;
+      min-height: 60px;
+      position: relative;
+      z-index: 0;
+  }
+  .luna-scroll-inner {
+      vertical-align: bottom !important;
+}
+  
+  /* Luna Chat Widget container styles */
+  #vlSuperclusterRoot #vlLunaChatContainer,
+  #vlClientRoot #vlLunaChatContainer {
+      width: 100%;
+      min-height: 60px;
+      position: relative;
+      z-index: 0;
+      isolation: isolate;
+  }
+  
+  /* Ensure Luna panel and fab escape container stacking context in Supercluster */
+  #vlSuperclusterRoot #vlLunaChatContainer .luna-panel,
+  #vlClientRoot #vlLunaChatContainer .luna-panel,
+  #vlSuperclusterRoot #vlLunaChatContainer .luna-fab,
+  #vlClientRoot #vlLunaChatContainer .luna-fab {
+      position: fixed !important;
+  }
+  
+  /* Ensure Luna Widget styles don't conflict */
+  #vlSuperclusterRoot .luna-fab,
+  #vlClientRoot .luna-fab {
+      position: fixed !important;
+      z-index: 2147483647 !important;
+      bottom: auto !important;
+      right: auto !important;
+      top: auto !important;
+      left: auto !important;
+      transform: none !important;
+  }
+  
+  #vlSuperclusterRoot .luna-panel,
+  #vlClientRoot .luna-panel {
+      position: fixed !important;
+      z-index: 2147483647 !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+  }
+  
+  /* Ensure Luna panel is always on top when shown */
+  #vlSuperclusterRoot .luna-panel.show,
+  #vlClientRoot .luna-panel.show {
+      z-index: 2147483647 !important;
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+  }
+  
+  /* Prevent panel clicks from bubbling */
+  #vlSuperclusterRoot .luna-panel *,
+  #vlClientRoot .luna-panel * {
+      pointer-events: auto !important;
+  }
+  
+  /* Position Luna panel on the left side */
+  #vlSuperclusterRoot .luna-panel,
+  #vlClientRoot .luna-panel {
+      left: 2rem !important;
+      right: auto !important;
+  }
+  
+  /* Position Luna session-ended panel on the left side with highest z-index */
+  #vlSuperclusterRoot .luna-session-ended,
+  #vlClientRoot .luna-session-ended {
+      left: 2rem !important;
+      right: auto !important;
+      z-index: 999999 !important;
+  }
+  
+  #vlSuperclusterRoot .vl-controls .control-btn,
+  #vlClientRoot .vl-controls .control-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid #2E2C2A;
+      color: #fff4e9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+  }
+  
+  #vlSuperclusterRoot .vl-controls .control-btn:hover,
+  #vlClientRoot .vl-controls .control-btn:hover {
+      background: rgba(0,0,0, 0.3);
+      transform: scale(1.1);
+      background: #fff4e9;
+      color:#000;
+  }
+  
+  #vlSuperclusterRoot .vl-controls .control-btn:active,
+  #vlClientRoot .vl-controls .control-btn:active {
+      transform: scale(0.95);
+  }
+  
+  #vlSuperclusterRoot .vl-controls .icon,
+  #vlClientRoot .vl-controls .icon {
+      font-size: 1.2rem;
+      font-weight: bold;
+  }
+  
+  /* Eye icon toggle for connections */
+  #vlSuperclusterRoot #connectionsIcon.hidden::before,
+  #vlClientRoot #connectionsIcon.hidden::before {
+      content: "🚫";
+  }
+  
+  #vlSuperclusterRoot #connectionsIcon.hidden,
+  #vlClientRoot #connectionsIcon.hidden {
+      opacity: 0.5;
+  }
+  #clientName {
+    margin-right: 5px;
+  }
+  
+  /* Client Page Content Styles */
+  #vlClientRoot .vl-client-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      z-index: 100;
+      max-width: 800px;
+      padding: 2rem;
+  }
+  
+  /* Client Page License and Connection Status Positioning */
+  #vlClientRoot .vl-license-key {
+      position: absolute;
+      bottom: 8rem;
+      left: 2rem;
+      z-index: 1001;
+  }
+  
+  #vlClientRoot .vl-connection-status {
+      position: absolute;
+      bottom: 6rem;
+      left: 2rem;
+      z-index: 1001;
+  }
+  
+  #vlClientRoot .vl-luna-chat {
+      position: absolute;
+      bottom: 4rem;
+      left: 2rem;
+      z-index: 1001;
+  }
+  
+  #vlClientRoot .vl-client-content h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, #00d4ff, #0099cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+  }
+  
+  #vlClientRoot .vl-client-content p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+  }
+  
+  #vlClientRoot .vl-client-placeholder {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 600px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  
+  #vlClientRoot .vl-client-placeholder h3 {
+      color: #fff4e9;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+  }
+  
+  #vlClientRoot .vl-client-placeholder p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+  }
+  
+  #vlClientRoot .vl-client-placeholder em {
+      color: rgba(255, 255, 255, 0.6);
+      font-style: italic;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+      #vlSuperclusterRoot .vl-header,
+      #vlClientRoot .vl-header {
+          top: 1rem;
+          left: 1rem;
+      }
+  
+      #vlSuperclusterRoot .vl-main-menu,
+      #vlClientRoot .vl-main-menu {
+          top: 6rem;
+          left: 1rem;
+      }
+  
+      #vlSuperclusterRoot .vl-main-menu a,
+      #vlClientRoot .vl-main-menu a {
+          min-width: 180px;
+          padding: 0.35rem 0.75rem;
+      }
+  
+      #vlSuperclusterRoot .vl-bottom-left,
+      #vlClientRoot .vl-bottom-left {
+          bottom: 1rem;
+          left: 1rem;
+      }
+  
+      #vlSuperclusterRoot .vl-controls,
+      #vlClientRoot .vl-controls {
+          bottom: 1rem;
+          right: 1rem;
+      }
+  
+      #vlSuperclusterRoot .vl-controls .control-btn,
+      #vlClientRoot .vl-controls .control-btn {
+          width: 45px;
+          height: 45px;
+      }
+  
+      #vlClientRoot .vl-client-content h1 {
+          font-size: 2rem;
+      }
+  
+      #vlClientRoot .vl-client-content p {
+          font-size: 1rem;
+      }
+  
+      #vlClientRoot .vl-client-placeholder {
+          padding: 1.5rem;
+          margin: 1rem auto;
+      }
+  }
+  
+  #vlSuperclusterRoot .vl-controls,
+  #vlClientRoot .vl-controls {
+      position: absolute;
+      bottom: 2rem;
+      display: flex;
+      gap: 0.5rem;
+      padding: 0;
+      pointer-events: auto;
+      z-index: 4;
+      flex-wrap: nowrap;
+      right:2rem;
+  }
+  
+  #vlSuperclusterRoot .control-btn,
+  #vlClientRoot .control-btn {
+      border: 1px solid rgba(120, 196, 255, 0.25);
+      background: rgba(18, 32, 60, 0.85);
+      color: #e1f0ff;
+      border-radius: 10px;
+      padding: 0.55rem 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+      font-weight: 600;
+  }
+  
+  #vlSuperclusterRoot .control-btn .icon,
+  #vlClientRoot .control-btn .icon {
+      font-size: 1.05rem;
+      line-height: 1;
+  }
+  
+  #vlSuperclusterRoot .control-btn:hover,
+  #vlClientRoot .control-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(32, 54, 92, 0.95);
+      border-color: rgba(156, 215, 255, 0.55);
+      color: #fff4e9;
+  }
+  
+  #vlSuperclusterRoot .control-btn:active,
+  #vlClientRoot .control-btn:active {
+      transform: translateY(0);
+  }
+  
+  #vlSuperclusterRoot .control-btn.active,
+  #vlClientRoot .control-btn.active {
+      background: linear-gradient(135deg, rgba(120, 196, 255, 0.35), rgba(66, 138, 255, 0.55));
+      border-color: rgba(156, 215, 255, 0.65);
+      color: #fff4e9;
+  }
+  
+  #vlSuperclusterRoot .control-btn.paused,
+  #vlClientRoot .control-btn.paused {
+      opacity: 0.85;
+      background: rgba(32, 36, 58, 0.8);
+  }
+  
+  #vlSuperclusterRoot .control-btn[data-state="hidden"],
+  #vlClientRoot .control-btn[data-state="hidden"] {
+      background: rgba(28, 30, 44, 0.75);
+      border-color: rgba(90, 118, 164, 0.45);
+      color: rgba(189, 210, 244, 0.75);
+  }
+  #vlSuperclusterRoot .vl-main-menu li svg,
+  #vlClientRoot .vl-main-menu li svg {
+    max-width: 20px;
+  }
+  #vlSuperclusterRoot .vl-supercluster-overlay .active img,
+  #vlClientRoot .vl-supercluster-overlay .active img {
+    filter: invert(1);
+  }
+  #vlSuperclusterRoot .vl-supercluster-overlay .vl-main-menu .icon img,
+  #vlClientRoot .vl-supercluster-overlay .vl-main-menu .icon img {
+      max-width:15px;
+      height:20px;
+  }
+  #clientDropdownLightbox {
+    z-index: 999999999999999999 !important;
+    position: absolute;
+    margin-top: 0;
+    margin-left: 0;
+    padding: 10px;
+    background-color: rgba(0,0,0,.25);
+    backdrop-filter: blur(8px);
+    border-radius: 5px;
+    min-width: 215px;
+    height: 55.5vh;
+  }
+  #logoutModal {
+    z-index: 999999999999999999 !important;
+    position: absolute;
+    margin-top: 0;
+    margin-left: 0;
+    padding: 10px 10px 10px 32px;
+    background-color: rgba(0,0,0,.25);
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    min-width: 100vw;
+    height: 100vh;
+    text-align: center;
+    padding-top: calc(30vw - 200px);
+  }
+  #logoutModal h3 {
+    font-size: 36px;
+    margin-bottom: 0;
+  }
+  #logoutModal p {
+    font-size: 22px;
+  }
+  #logoutConfirm {
+    background: #fff4e7;
+    color: #000;
+  }
+  #logoutCancel {
+    background: #000;
+    color: #fff4e9;
+  }
+  #logoutCancel, #logoutConfirm {
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 7px;
+    padding: 15px 20px;
+  }
+  .logout-modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin-top:10px;
+  }
+  .vl-activity-item:nth-child(1) {
+    padding-top: 0 !important;
+  }
+  #lunaComposerHistoryList .vl-activity-item {
+    padding: 0 !important;
+    white-space: nowrap;
+    overflow: auto;
+    text-overflow: ellipsis;
+    margin-top: 3px !important;
+    padding-bottom:5px !important;
+    border-bottom:none !important;
+  }
+  #activityTimeStamp {
+    font-size: 0.65rem;
+    font-weight:300;
+    font-family:"Supercluster Mono";
+    color: #8F9193;
+  }
+  #clientDropdownArrow img {
+    max-width: 10px;
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+  .license-container {
+      position: relative;
+      display: inline-block;
+  }
+  .blurred-text {
+      color: rgba(255, 255, 255);
+      filter: blur(3px);
+      font-size: inherit;
+      letter-spacing: 2px;
+  }
+  .copy-license-btn {
+    position: absolute;
+    right: -25px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s ease;
+    border: none;
+    padding: 3px 0 0;
+  }
+  #vlSuperclusterRoot .status-icon img {
+      width: 11px;
+  }
+  .copy-license-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 1);
+  }
+  .copy-license-btn:active {
+      transform: translateY(-50%) scale(0.95);
+  }
+  .client-dropdown-content div {
+    padding: 5px 10px;
+    font-weight: 700;
+    color: #fff4e9;
+  }
+  .copy-license-btn svg {
+    width: 14px;
+  }
+  #recentActivityWidget {
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 300px);
+      min-height: calc(100vh - 300px);
+      overflow: hidden;
+      transition: min-height 0.3s ease-out, max-height 0.3s ease-out;
+  }
+  
+  #recentActivityWidget:has(.vl-widget-body.vl-widget-body-hidden) {
+      min-height: auto;
+      max-height: none;
+  }
+      
+  #recentActivityWidget .vl-widget-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      min-height: 150px;
+      scroll-behavior: smooth;
+  }
+  
+  #recentActivityWidget .vl-widget-body.vl-widget-body-hidden {
+      flex: 0;
+      min-height: 0;
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      opacity: 0;
+      overflow: hidden;
+  }
+      
+  #recentActivityWidget .vl-widget-body::-webkit-scrollbar {
+      width: 6px;
+  }
+      
+  #recentActivityWidget .vl-widget-body::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+  }
+  #recentActivityWidget .vl-widget-body::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+  }
+  
+  #recentActivityWidget .vl-widget-body::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
+      }
+  
+  #recentActivityList {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+  }
+  #superclusterSummary {
+    margin: 0;
+  }
+  img#superclusterStatusIcon {
+    background: #0F9900;
+    padding: 3px;
+    border-radius: 20px;
+  }
+  
+  /* Tutorial Overlay Styles */
+  .tutorial-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10002;
+      pointer-events: auto;
+  }
+  
+  .tutorial-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+  }
+  
+  .tutorial-highlight {
+      position: absolute;
+      border: 3px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.5),
+                  0 0 60px rgba(120, 196, 255, 0.4),
+                  inset 0 0 20px rgba(255, 255, 255, 0.2);
+      pointer-events: none;
+      transition: all 0.3s ease;
+  }
+  
+  .tutorial-content {
+    position: absolute;
+    background: rgba(0,0,0,.1);
+    backdrop-filter: blur(16px);
+    border: 1px solid #2E2C2A;
+    border-radius: 16px;
+    padding: 2rem;
+    min-width: 320px;
+    max-width: 500px;
+    z-index: 10003;
+    pointer-events: auto;
+  }
+  
+  .tutorial-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      color: #fff4e9;
+      font-size: 2rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+  }
+  
+  .tutorial-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.1);
+  }
+  
+  .tutorial-step-content {
+      margin-bottom: 1.5rem;
+  }
+  
+  .tutorial-title {
+      color: #fff4e9;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem;
+      letter-spacing: 0.02em;
+  }
+  
+  .tutorial-description {
+      color: rgba(255, 244, 233, 0.85);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin: 0;
+  }
+  
+  .tutorial-options {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .tutorial-options label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: rgba(255, 244, 233, 0.9);
+      font-size: 0.9rem;
+  }
+  
+  .tutorial-options input[type="checkbox"] {
+      margin-right: 0.5rem;
+      cursor: pointer;
+  }
+  
+  .tutorial-navigation {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.5rem;
+  }
+  
+  .tutorial-btn {
+    background: #fff4e9;
+    color: #000;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px;
+  }
+  
+  .tutorial-btn:hover {
+      background: rgba(120, 196, 255, 0.3);
+      border-color: rgba(120, 196, 255, 0.6);
+      transform: translateY(-1px);
+  }
+  
+  .tutorial-btn:active {
+      transform: translateY(0);
+  }
+  
+  .tutorial-progress {
+      flex: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+  }
+  
+  .tutorial-progress::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: var(--progress-width, 0%);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    background: linear-gradient(90deg, #8D8C00 0%, #974C00 75.51%);
+  }
+  #vlSuperclusterRoot::after {
+    background: radial-gradient(100% 100% at 50% 0%, rgba(255, 128, 0, 0.27) 0%, rgba(0, 0, 0, 0.27) 100%), radial-gradient(65.54% 65.53% at 39% 0%, rgba(25, 255, 0, 0.28) 0%, rgba(0, 0, 0, 0.28) 100%), radial-gradient(69.57% 69.56% at 68.55% 0%, rgba(255, 0, 0, 0.66) 0%, rgba(0, 0, 0, 0.66) 100%);
+    height: 100vh;
+    content: "";
+    position: absolute;
+    width: 100vw;
+    z-index: 1;
+    transform: rotate(180deg);
+    left: 0;
+    opacity: .3;
+    pointer-events:none;
+  }
+  .luna-input {
+      font-size:1rem !important;
+  }
+  .luna-scroll-wrapper::after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    background: linear-gradient(to left, #8d551c, #8D8C0000);
+  }
+  .luna-launcher {
+      background: linear-gradient(270deg, #974C00 0%, #8D8C00 100%) !important;
+      color:#000 !important;
+      border:none !important;
+  }
+  .luna-launcher span.txt {
+      font-size: .88rem !important;
+      text-align: left !important;
+  }
+  .luna-panel {
+      bottom:32px !important;
+  }
+  .luna-close {
+    font-size: 21px;
+    position: absolute;
+    right: 4px;
+    opacity: .5;
+  }
+  .luna-close:hover {
+      opacity:1;
+  }
+  .dropdown-text {
+    color: #fff4e9;
+  }
+  .canned-prompts-list::before {
+    display: none; /* Hide pseudo-element, using actual buttons instead */
+  }
+  
+  .canned-prompts-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .canned-prompts-scroll-btn {
+    position: absolute;
+    top: 44px;
+    width: 20px;
+    height: 20px;
+    background: url(https://visiblelight.ai/wp-content/uploads/2025/08/left-right-arrow.svg) no-repeat center;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+    z-index: 10000;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+  }
+  
+  .canned-prompts-scroll-btn:hover {
+    opacity: 1;
+  }
+  
+  .canned-prompts-scroll-left {
+    left: 0;
+    transform: rotate(180deg);
+  }
+  
+  .canned-prompts-scroll-right {
+    right: 0;
+  }
+  
+  .canned-prompts-wrapper::after {
+    width: 180px;
+    right: 0;
+    position: absolute;
+    height: 100%;
+    content: "";
+    background: linear-gradient(to left, #000000,#00000000);
+    pointer-events: none;
+    max-height: 114px;
+    top: 0;
+    z-index: 9999;
+  }
+  
+  .canned-prompts-list::after {
+    display: none; /* Moved to wrapper to keep it fixed */
+  }
+  .canned-prompt-item h3 {
+  line-height: 1.25rem !important;
+  font-size: .85rem !important;
+  margin-bottom: 0 !important;
+  }
+  .luna-composer-toolbar button {
+      font-family: 'Supercluster Mono';
+      font-size: .77rem !important;
+  }
+  .canned-prompts-list {
+    overflow-x: scroll !important;
+  width: 100% !important;
+  scroll-behavior: smooth !important;
+  display: flex !important;
+  position:relative !important;
+  }
+  .canned-prompt-item {
+    min-width: 360px !important;
+    height: max-content;
+  }
+  .TypeGradient {
+    background: linear-gradient(90deg, #8D8C00 0%, #974C00 75.51%);
+      background-clip: border-box;
+    background-clip: border-box;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    max-width: fit-content;
+  }
+  .luna-composer-toolbar {
+      z-index: 9999999 !important;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0,0,0, 0.1);
+    }
+    .luna-composer-toolbar span#luna-composer-save-message {
+        font-family: 'Supercluster Display' !important;
+        margin-left: 0 !important;
+        font-size: 12px !important;
+    }
+    #luna-composer-editor :first-child {
+        margin-top: 0 !important;
+    }
+    /* Force backdrop-filter for export menu */
+    #luna-composer-export-menu {
+        background: rgba(0,0,0,0.85) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        z-index: 10000 !important;
+        isolation: isolate !important;
+        will-change: transform !important;
+    }
+    /* Luna Composer loading animation */
+    .luna-composer-loading-text {
+        background: linear-gradient(to right, #fff4e9 20%, #9A9793 30%, #9A9793 70%, #fff4e9 80%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: textShine 7s ease-in-out infinite alternate;
+        color: #fff4e9; /* Fallback color for browsers that don't support background-clip */
+    }
+    @keyframes textShine {
+        to {
+            background-position: -200%;
+        }
+    }
+    .luna-composer-loading-icon {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+        vertical-align: middle;
+        animation: lunaComposerSpin 1s linear infinite;
+        color: #fff4e9;
+        opacity: 0.8;
+    }
+    @keyframes lunaComposerSpin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+  }
+  .luna-composer__editor h2 {
+      font-family: 'Supercluster Mono';
+      font-size: 14px !important;
+  }
+  #clientDropdownContent {
+    background:linear-gradient(#000, #2E2C2A90) !important;
+    color: #000 !important;
+    border:1px solid #232120;
+  }
+  .vl-activity-item div {
+    white-space: nowrap;
+    overflow: auto;
+    text-overflow: ellipsis;
+  }
+  .luna-composer-toolbar span {
+      font-family: 'Supercluster Mono';
+      font-size: 14px !important;
+      margin-left: -12px;
+  }
+  @media (max-width: 768px) {
+      #vlSuperclusterRoot .control-panel {
+          left: 50%;
+          transform: translateX(-50%);
+          bottom: 1.5rem;
+          flex-wrap: wrap;
+          justify-content: center;
+      }
+  
+  #vlSuperclusterRoot .control-btn {
+      flex: 1 1 calc(50% - 0.5rem);
+      justify-content: center;
+  }
+}
+
+/* Hide scrollbar for canned prompts list while keeping smooth scrolling */
+.canned-prompts-list {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.canned-prompts-list::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+#luna-composer-reimagine-btn span {
+    font-size: .77rem !important;
+    padding-left: 10px;
+  }
