@@ -1496,7 +1496,7 @@ final class VL_License_Manager {
                 header('Access-Control-Allow-Origin: *');
             }
             header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-            header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept');
+            header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, X-WP-Nonce, x-wp-nonce, X-Luna-Composer, x-luna-composer, X-Luna-Composer-Mode, x-luna-composer-mode');
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Max-Age: 86400');
         }
