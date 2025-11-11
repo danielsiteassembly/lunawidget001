@@ -4309,7 +4309,7 @@ function luna_widget_chat_handler( WP_REST_Request $req ) {
       header('Access-Control-Allow-Origin: *');
     }
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, X-WP-Nonce, x-wp-nonce, X-Luna-Composer, x-luna-composer, X-Luna-Composer-Mode, x-luna-composer-mode, X-Luna-Composer-Intent, x-luna-composer-intent');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, X-WP-Nonce, x-wp-nonce');
     header('Access-Control-Allow-Credentials: true');
   }
   
@@ -4353,15 +4353,6 @@ function luna_widget_chat_handler( WP_REST_Request $req ) {
     }
   }
 
-  $intent_param = $req->get_param('intent');
-  if (is_string($intent_param)) {
-    $intent_normalized = strtolower(trim($intent_param));
-    if ($intent_normalized !== '') {
-      $composer_markers[] = $intent_normalized;
-      $composer_markers[] = str_replace(array('/', '\\', '-'), '_', $intent_normalized);
-    }
-  }
-
   $composer_flag_param = $req->get_param('composer');
   if ($composer_flag_param === true || $composer_flag_param === '1' || $composer_flag_param === 1 || $composer_flag_param === 'true') {
     $is_composer = true;
@@ -4369,13 +4360,7 @@ function luna_widget_chat_handler( WP_REST_Request $req ) {
 
   if (!$is_composer) {
     foreach ($composer_markers as $marker) {
-      if (!is_string($marker) || $marker === '') {
-        continue;
-      }
-      if (
-        in_array($marker, array('composer', 'compose', 'luna_composer', 'luna_compose', 'lunacomposer', 'lunacompose'), true)
-        || strpos($marker, 'composer') !== false
-      ) {
+      if (in_array($marker, array('composer', 'compose', 'luna_composer', 'luna_compose', 'lunacomposer', 'lunacompose'), true)) {
         $is_composer = true;
         break;
       }
@@ -4388,12 +4373,6 @@ function luna_widget_chat_handler( WP_REST_Request $req ) {
 
   if (!$is_composer && !empty($_SERVER['HTTP_X_LUNA_COMPOSER']) && function_exists('luna_request_value_signals_composer')) {
     if (luna_request_value_signals_composer($_SERVER['HTTP_X_LUNA_COMPOSER'])) {
-      $is_composer = true;
-    }
-  }
-
-  if (!$is_composer && !empty($_SERVER['HTTP_X_LUNA_COMPOSER_INTENT']) && function_exists('luna_request_value_signals_composer')) {
-    if (luna_request_value_signals_composer($_SERVER['HTTP_X_LUNA_COMPOSER_INTENT'])) {
       $is_composer = true;
     }
   }
