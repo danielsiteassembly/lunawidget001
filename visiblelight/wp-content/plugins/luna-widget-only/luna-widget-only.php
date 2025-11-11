@@ -4321,6 +4321,9 @@ function luna_widget_chat_handler( WP_REST_Request $req ) {
   
   try {
   $prompt = trim( (string) $req->get_param('prompt') );
+  if ($prompt === '') {
+    $prompt = trim( (string) $req->get_param('message') );
+  }
   $is_greeting = (bool) $req->get_param('greeting');
 
   $raw_context = $req->get_param('context');
