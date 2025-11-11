@@ -445,24 +445,22 @@
                 const sites = data.sites || [];
                 const rawTotalSites = Number(data.total);
                 const totalSites = Number.isFinite(rawTotalSites) ? rawTotalSites : (Array.isArray(sites) ? sites.length : 0);
-                const totalLabel = totalSites === 1 ? 'Total Connected Site/App' : 'Total Connected Sites/Apps';
                 const observedLabel = totalSites === 1 ? 'app observed' : 'apps observed';
 
                 console.log('[Omniscient App Observatory] Sites found:', totalSites, sites);
 
                 // Build HTML with explicit background
-                let html = '<div class="omniscient-observatory" style="min-height: 100vh; background: #000000 !important; color: #fff4e9; padding: 40px 20px; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1000;">';
+                let html = '<div class="omniscient-observatory" style="min-height: 100vh; background: rgba(0,0,0,.1) !important; color: #fff4e9; padding: 40px 20px; width: 55%; max-width:100%; margin: 0 auto; position: relative; z-index: 1000;backdrop-filter:blur(8px);">';
 
                 // Header with total count
                 html += '<div style="margin-bottom: 30px;">';
                 html += '<h1 class="TypeGradient" style="margin-bottom: 10px; font-size: 2rem;">Omniscient App Observatory</h1>';
-                html += '<p style="color: #9A9793; font-size: 1rem; margin: 0 0 10px 0;">' + totalLabel + ': <strong style="color: #fff4e9;">' + totalSites + '</strong></p>';
                 html += '<div class="observatory-subtitle" style="color: #9A9793; font-size: 0.875rem; margin: 0 0 20px 0;">' + totalSites + ' ' + observedLabel + '</div>';
                 
                 // Search and View Toggle
                 html += '<div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;">';
                 html += '<div style="flex: 1; min-width: 300px;">';
-                html += '<input type="text" id="observatory-search" placeholder="Search sites/apps..." style="width: 100%; padding: 10px 16px; background: #2E2C2A50; border: 1px solid #5A575335; border-radius: 6px; color: #fff4e9; font-size: 0.875rem; outline: none;" />';
+                html += '<input type="text" id="observatory-search" placeholder="Search sites/apps..." style="width: 100%; padding: 10px 16px; background: rgba(0,0,0,.1); border: 1px solid #1f1d1a; border-radius: 6px; color: #fff4e9; font-size: 0.875rem; outline: none;" />';
                 html += '</div>';
                 html += '<div style="display: flex; align-items: center; gap: 10px;">';
                 html += '<span style="color: #9A9793; font-size: 0.875rem;">View:</span>';
@@ -487,7 +485,7 @@
                         const fallbackShownStyles = 'display: flex; ' + fallbackSharedStyles;
                         const fallbackHiddenStyles = 'display: none; ' + fallbackSharedStyles;
                         const imageErrorHandler = escapeAttr("this.remove(); const fallback = this.nextElementSibling; if (fallback) { fallback.style.display = 'flex'; }");
-                        html += '<div class="observatory-site-item" data-site-url="' + (site.url || '').toLowerCase() + '" data-site-title="' + (site.title || '').toLowerCase() + '" data-site-domain="' + (site.domain || '').toLowerCase() + '" style="background: #000000; border: 1px solid #2E2C2A; border-radius: 8px; padding: 20px; transition: all 0.2s ease; cursor: pointer;" onmouseover="this.style.borderColor=\'#5A5753\';" onmouseout="this.style.borderColor=\'#2E2C2A\';" onclick="window.open(\'' + (site.url || '#') + '\', \'_blank\');">';
+                        html += '<div class="observatory-site-item" data-site-url="' + (site.url || '').toLowerCase() + '" data-site-title="' + (site.title || '').toLowerCase() + '" data-site-domain="' + (site.domain || '').toLowerCase() + '" style="background: #000000; border: 1px solid #1f1d1a; border-radius: 8px; padding: 20px; transition: all 0.2s ease; cursor: pointer;" onmouseover="this.style.borderColor=\'#5A5753\';" onmouseout="this.style.borderColor=\'#2E2C2A\';" onclick="window.open(\'' + (site.url || '#') + '\', \'_blank\');">';
 
                         // Block view layout
                         html += '<div class="observatory-site-block" style="display: grid; grid-template-columns: 120px 1fr auto; gap: 20px; align-items: start;">';
@@ -511,14 +509,14 @@
                         html += '<div style="display: flex; gap: 10px; flex-wrap: wrap;">';
                         
                         // Ping Status
-                        html += '<span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ' + (site.ping_color || '#9A9793') + '; color: #000;">' + (site.ping_label || 'Unknown') + '</span>';
+                        html += '<span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ' + (site.ping_color || '#9A9793') + '; color: #fff4e9;">' + (site.ping_label || 'Unknown') + '</span>';
                         
                         // SSL/TLS Status
                         let sslLabel = 'Unknown';
                         let sslColor = '#9A9793';
                         if (site.ssl_status === 'valid') {
                             sslLabel = 'SSL Valid';
-                            sslColor = '#00a32a';
+                            sslColor = '#0F9900';
                         } else if (site.ssl_status === 'expiring_soon') {
                             sslLabel = 'SSL Expiring Soon';
                             sslColor = '#dba617';
@@ -529,7 +527,7 @@
                             sslLabel = 'Not HTTPS';
                             sslColor = '#9A9793';
                         }
-                        html += '<span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ' + sslColor + '; color: #000;">' + sslLabel + '</span>';
+                        html += '<span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ' + sslColor + '; color: #fff4e9;">' + sslLabel + '</span>';
                         
                         html += '</div>';
                         html += '</div>';
@@ -538,7 +536,7 @@
                         
                         // List view layout (hidden by default)
                         html += '<div class="observatory-site-list" style="display: none; grid-template-columns: 80px 1fr auto auto; gap: 16px; align-items: center;">';
-                        html += '<div style="width: 80px; height: 80px; background: #2E2C2A; border-radius: 6px; overflow: hidden; flex-shrink: 0;">';
+                        html += '<div style="width: 80px; height: 80px; background: #2E2C2A; border-radius: 6px; overflow: hidden; flex-shrink: 0; border: 1px solid #1f1d1a;">';
                         if (hasOgImage) {
                             html += '<img src="' + safeOgImage + '" alt="' + safeImageAlt + '" style="width: 100%; height: 100%; object-fit: cover;" onerror="' + imageErrorHandler + '" />';
                             html += '<div class="observatory-no-image" style="' + fallbackHiddenStyles + '">No Image</div>';
@@ -551,8 +549,8 @@
                         html += '<p style="color: #9A9793; margin: 0; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + (site.url || '') + '</p>';
                         html += '</div>';
                         html += '<div style="display: flex; gap: 8px;">';
-                        html += '<span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ' + (site.ping_color || '#9A9793') + '; color: #000;">' + (site.ping_label || 'Unknown') + '</span>';
-                        html += '<span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ' + sslColor + '; color: #000;">' + sslLabel + '</span>';
+                        html += '<span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ' + (site.ping_color || '#9A9793') + '; color: #fff4e9;">' + (site.ping_label || 'Unknown') + '</span>';
+                        html += '<span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ' + sslColor + '; color: #fff4e9;">' + sslLabel + '</span>';
                         html += '</div>';
                         html += '</div>';
                         
@@ -569,7 +567,7 @@
                 html += '.observatory-list-view .observatory-site-item > .observatory-site-block { display: none !important; }';
                 html += '.observatory-block-view .observatory-site-item > .observatory-site-block { display: grid !important; }';
                 html += '.observatory-block-view .observatory-site-item > .observatory-site-list { display: none !important; }';
-                html += '.view-toggle-btn.active { background: #2E2C2A !important; color: #fff4e9 !important; }';
+                html += '.view-toggle-btn.active { background: linear-gradient(90deg, #8D8C00 0%, #974C00 75.51%) !important; color: #fff4e9 !important; border:none !important;}';
                 html += '.view-toggle-btn:not(.active) { background: #2E2C2A50 !important; color: #9A9793 !important; }';
                 html += '</style>';
                 
