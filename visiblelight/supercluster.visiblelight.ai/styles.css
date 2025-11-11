@@ -565,9 +565,8 @@
   
   #vlSuperclusterRoot .vl-main-menu li.active a,
   #vlClientRoot .vl-main-menu li.active a {
-      background: #fff4e9;
-      border-color: #fff4e9;
-      color: #000;
+      background: #fff4e910;
+      color: #fff4e9;
   }
   
   #vlSuperclusterRoot .vl-main-menu .icon,
@@ -1024,10 +1023,6 @@
   #vlSuperclusterRoot .vl-main-menu li svg,
   #vlClientRoot .vl-main-menu li svg {
     max-width: 20px;
-  }
-  #vlSuperclusterRoot .vl-supercluster-overlay .active img,
-  #vlClientRoot .vl-supercluster-overlay .active img {
-    filter: invert(1);
   }
   #vlSuperclusterRoot .vl-supercluster-overlay .vl-main-menu .icon img,
   #vlClientRoot .vl-supercluster-overlay .vl-main-menu .icon img {
