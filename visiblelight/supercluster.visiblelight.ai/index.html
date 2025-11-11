@@ -11,6 +11,7 @@
         id="vlSuperclusterRoot"
         class="vl-supercluster-root vl-supercluster"
         data-login-path="/supercluster-ai-constellation-login/"
+        style="background:#000000 !important;"
     >
 
 
@@ -156,7 +157,7 @@
                         </div>
                     </div>
                     <div class="vl-widget-body">
-                        <p id="superclusterSummary">Loading your Supercluster…</p>
+                        <p id="superclusterSummary">Loading your Observatory…</p>
                     </div>
                 </div>
 
@@ -2746,7 +2747,7 @@
             }
             
             // Ensure body has black background
-            document.body.style.backgroundColor = '#00000000';
+            document.body.style.backgroundColor = '#000000';
             
             // Map category slug to galaxy name
             const slugToGalaxyMap = {
@@ -2863,7 +2864,7 @@
             }
             
             // Ensure body has black background
-            document.body.style.backgroundColor = '#00000000';
+            document.body.style.backgroundColor = '#000000';
             
             // Fetch stream data from VL Hub
             try {
@@ -3167,7 +3168,7 @@
                     const newPageContent = document.createElement('div');
                     newPageContent.id = 'vlPageContent';
                     newPageContent.className = 'vl-page-content';
-                    newPageContent.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 1; overflow-y: auto; display: block !important; pointer-events: none;';
+                    newPageContent.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 1; overflow-y: auto; display: block !important; pointer-events: none;';
                     document.body.appendChild(newPageContent);
                 } else {
                     // Ensure page content is visible (but allow overlay to show through)
@@ -3177,7 +3178,7 @@
                     pageContent.style.left = '0';
                     pageContent.style.width = '100%';
                     pageContent.style.height = '100%';
-                    pageContent.style.background = 'transparent';
+                    pageContent.style.background = '000000';
                     pageContent.style.zIndex = '1';
                     pageContent.style.overflowY = 'auto';
                     pageContent.style.pointerEvents = 'none';
