@@ -280,10 +280,13 @@
         async function renderOmniscientAppObservatory() {
             console.log('[Omniscient App Observatory] Rendering page...');
             
-            // CRITICAL: Hide the Supercluster visualization and canvas immediately
+            // CRITICAL: Neutralize the Supercluster visualization canvas immediately
             const rootContainer = document.getElementById('vlSuperclusterRoot');
             if (rootContainer) {
-                rootContainer.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;';
+                rootContainer.style.setProperty('display', 'block', 'important');
+                rootContainer.style.setProperty('visibility', 'visible', 'important');
+                rootContainer.style.setProperty('opacity', '1', 'important');
+                rootContainer.style.setProperty('pointer-events', 'auto', 'important');
             }
             
             // Hide any canvas elements
@@ -490,10 +493,13 @@
                     document.documentElement.style.cssText = 'background: transparent !important; background-color: transparent !important;';
                 }
                 
-                // Hide the Supercluster root container and canvas completely
+                // Keep the Supercluster container visible while suppressing any canvases
                 const rootContainer = document.getElementById('vlSuperclusterRoot');
                 if (rootContainer) {
-                    rootContainer.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;';
+                    rootContainer.style.setProperty('display', 'block', 'important');
+                    rootContainer.style.setProperty('visibility', 'visible', 'important');
+                    rootContainer.style.setProperty('opacity', '1', 'important');
+                    rootContainer.style.setProperty('pointer-events', 'auto', 'important');
                 }
                 
                 // Hide any canvas elements that might be covering content
@@ -550,11 +556,14 @@
                         pageContent.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1000 !important; background: transparent !important;';
                     }
                     
-                    // Ensure root container stays hidden
+                    // Ensure the Supercluster container remains visible for UI elements
                     if (rootContainer) {
                         const rootDisplay = window.getComputedStyle(rootContainer).display;
-                        if (rootDisplay !== 'none') {
-                            rootContainer.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;';
+                        if (rootDisplay === 'none') {
+                            rootContainer.style.setProperty('display', 'block', 'important');
+                            rootContainer.style.setProperty('visibility', 'visible', 'important');
+                            rootContainer.style.setProperty('opacity', '1', 'important');
+                            rootContainer.style.setProperty('pointer-events', 'auto', 'important');
                         }
                     }
                     
